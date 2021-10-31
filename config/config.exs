@@ -7,6 +7,27 @@
 # General application configuration
 import Config
 
+config :tyler,
+  ecto_repos: [Tyler.Repo],
+  generators: [context_app: false]
+
+# Configures the endpoint
+config :tyler, Tyler.Endpoint,
+  url: [host: "localhost"],
+  render_errors: [view: Tyler.ErrorView, accepts: ~w(html json), layout: false],
+  pubsub_server: Tyler.PubSub,
+  live_view: [signing_salt: "ZSmF6axp"]
+
+# Configure esbuild (the version is required)
+config :esbuild,
+  version: "0.12.18",
+  default: [
+    args:
+      ~w(js/app.js --bundle --target=es2016 --outdir=../priv/static/assets --external:/fonts/* --external:/images/*),
+    cd: Path.expand("../apps/tyler/assets", __DIR__),
+    env: %{"NODE_PATH" => Path.expand("../deps", __DIR__)}
+  ]
+
 config :hello,
   ecto_repos: [Hello.Repo]
 
